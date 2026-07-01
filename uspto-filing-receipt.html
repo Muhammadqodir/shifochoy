@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Filing Receipt</title>
+<style>
+  @page {
+    size: A4;
+    margin: 14mm 16mm;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    padding: 0;
+    margin: 0;
+    background: #e6e6e6;
+  }
+
+  body {
+    font-family: "Times New Roman", Times, serif;
+    color: #000;
+    font-size: 10.3px;
+    line-height: 1.35;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 10mm auto;
+    background: #fff;
+    padding: 14mm 16mm;
+    box-shadow: 0 0 8px rgba(0,0,0,0.25);
+  }
+
+  @media print {
+    html, body { background: #fff; }
+    .page {
+      margin: 0;
+      box-shadow: none;
+      width: auto;
+      min-height: auto;
+      padding: 0;
+    }
+  }
+
+  /* ---------- Header ---------- */
+  .header {
+    display: grid;
+    grid-template-columns: 90px 1fr 210px;
+    column-gap: 8px;
+    align-items: start;
+  }
+
+  .seal {
+    width: 84px;
+    height: 84px;
+  }
+
+  .header-center {
+    text-align: center;
+    padding-top: 6px;
+  }
+  .header-center .title1 {
+    font-weight: bold;
+    font-size: 12.5px;
+    letter-spacing: 0.2px;
+  }
+
+  .header-right {
+    font-size: 9px;
+    line-height: 1.3;
+    text-align: left;
+  }
+  .header-right .dept {
+    font-weight: bold;
+  }
+
+  .header-rule {
+    border: none;
+    border-top: 1px solid #000;
+    margin: 4px 0 6px 0;
+  }
+
+  /* ---------- Bibliographic data table ---------- */
+  table.biblio {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-bottom: 6px;
+  }
+  table.biblio td {
+    border: 1px solid #000;
+    padding: 2px 4px 4px 4px;
+    vertical-align: top;
+  }
+  table.biblio .lbl {
+    font-size: 8px;
+    display: block;
+    margin-bottom: 10px;
+  }
+  table.biblio .val {
+    font-size: 10.5px;
+  }
+  table.biblio col.narrow { width: 10%; }
+
+  .confirmation {
+    text-align: right;
+    font-weight: bold;
+    font-size: 11px;
+    margin: 6px 0 10px 0;
+  }
+
+  .filing-receipt-title {
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+
+  /* ---------- Address / barcode row ---------- */
+  .addr-barcode-row {
+    display: grid;
+    grid-template-columns: 1fr 220px;
+    margin-bottom: 10px;
+  }
+  .addr-block {
+    font-size: 10.5px;
+    line-height: 1.45;
+  }
+  .barcode-block {
+    text-align: right;
+  }
+  .barcode {
+    height: 34px;
+    width: 200px;
+    margin-left: auto;
+    background-image: repeating-linear-gradient(
+      90deg,
+      #000 0px, #000 2px,
+      transparent 2px, transparent 3px,
+      #000 3px, #000 4px,
+      transparent 4px, transparent 6px,
+      #000 6px, #000 8px,
+      transparent 8px, transparent 9px,
+      #000 9px, #000 10px,
+      transparent 10px, transparent 13px
+    );
+    background-size: 200px 100%;
+  }
+  .barcode-num {
+    font-family: "Courier New", monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+  .date-mailed {
+    margin-top: 8px;
+    font-size: 10.5px;
+  }
+
+  hr.section-rule {
+    border: none;
+    border-top: 1px solid #000;
+    margin: 6px 0 10px 0;
+  }
+
+  .intro-text {
+    text-align: justify;
+    margin-bottom: 12px;
+  }
+  .intro-text b { font-weight: bold; }
+
+  .field {
+    margin-bottom: 10px;
+  }
+  .field-label {
+    font-weight: bold;
+  }
+  .field-inline .field-label {
+    font-weight: bold;
+  }
+
+  .applicants-list {
+    margin-top: 2px;
+  }
+  .applicants-list div {
+    margin-bottom: 1px;
+  }
+
+  .small-entity {
+    text-align: center;
+    font-weight: bold;
+    margin: 14px 0;
+  }
+
+  .title-value {
+    margin-top: 6px;
+    margin-left: 4px;
+  }
+
+  .class-value {
+    margin-top: 6px;
+    margin-left: 4px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <svg class="seal" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="47" fill="none" stroke="#000" stroke-width="1.2"/>
+      <circle cx="50" cy="50" r="40" fill="none" stroke="#000" stroke-width="0.7"/>
+      <path d="M50 30 L54 42 L67 42 L56 50 L60 63 L50 55 L40 63 L44 50 L33 42 L46 42 Z" fill="#000"/>
+      <path id="topCirc" d="M50,10 A40,40 0 0,1 90,50" fill="none"/>
+      <path id="botCirc" d="M10,50 A40,40 0 0,1 50,10" fill="none"/>
+      <text font-size="6.2" fill="#000" letter-spacing="0.5">
+        <textPath href="#topCirc" startOffset="2">
+          DEPARTMENT OF COMMERCE
+        </textPath>
+      </text>
+      <text font-size="6.2" fill="#000" letter-spacing="0.5">
+        <textPath href="#botCirc" startOffset="2">
+          UNITED STATES OF AMERICA
+        </textPath>
+      </text>
+    </svg>
+
+    <div class="header-center">
+      <div class="title1">UNITED STATES PATENT AND TRADEMARK OFFICE</div>
+    </div>
+
+    <div class="header-right">
+      <div class="dept">UNITED STATES DEPARTMENT OF COMMERCE</div>
+      <div>United States Patent and Trademark Office</div>
+      <div>Address: COMMISSIONER FOR PATENTS<br />
+        &nbsp;&nbsp;&nbsp;PO Box 1450<br />
+        &nbsp;&nbsp;&nbsp;Alexandria, Virginia 22313-1450<br />
+        &nbsp;&nbsp;&nbsp;www.uspto.gov</div>
+    </div>
+  </div>
+
+  <hr class="header-rule" />
+
+  <!-- Bibliographic table -->
+  <table class="biblio">
+    <colgroup>
+      <col style="width:16%">
+      <col style="width:15%">
+      <col style="width:12%">
+      <col style="width:13%">
+      <col style="width:16%">
+      <col style="width:14%">
+      <col style="width:14%">
+    </colgroup>
+    <tr>
+      <td><span class="lbl">APPLICATION NUMBER</span><span class="val">12/346,054</span></td>
+      <td><span class="lbl">FILING or 371(c) DATE</span><span class="val">12/30/2008</span></td>
+      <td><span class="lbl">GRP ART UNIT</span><span class="val">2838</span></td>
+      <td><span class="lbl">FIL FEE RECD</span><span class="val">540</span></td>
+      <td><span class="lbl">ATTY.DOCKET.NO</span><span class="val">TEK-5</span></td>
+      <td><span class="lbl">TOT CLAIMS</span><span class="val">23</span></td>
+      <td><span class="lbl">IND CLAIMS</span><span class="val">2</span></td>
+    </tr>
+  </table>
+
+  <div class="confirmation">CONFIRMATION NO. 8823</div>
+
+  <div class="filing-receipt-title">FILING RECEIPT</div>
+
+  <!-- Address / barcode -->
+  <div class="addr-barcode-row">
+    <div class="addr-block">
+      20808<br />
+      BROWN &amp; MICHAELS, PC<br />
+      400 M &amp; T BANK BUILDING<br />
+      118 NORTH TIOGA ST<br />
+      ITHACA, NY 14850
+    </div>
+    <div class="barcode-block">
+      <div class="barcode"></div>
+      <div class="barcode-num">*OC000000034002345*</div>
+      <div class="date-mailed">Date Mailed: 01/13/2009</div>
+    </div>
+  </div>
+
+  <p class="intro-text">
+    Receipt is acknowledged of this non-provisional patent application. The application will be taken up for examination
+    in due course. Applicant will be notified as to the results of the examination. Any correspondence concerning the
+    application must include the following identification information: the U.S. APPLICATION NUMBER, FILING DATE,
+    NAME OF APPLICANT, and TITLE OF INVENTION. Fees transmitted by check or draft are subject to collection.
+    <b>Please verify the accuracy of the data presented on this receipt. If an error is noted on this Filing Receipt, please
+    submit a written request for a Filing Receipt Correction. Please provide a copy of this Filing Receipt with the
+    changes noted thereon. If you received a &ldquo;Notice to File Missing Parts&rdquo; for this application, please submit
+    any corrections to this Filing Receipt with your reply to the Notice. When the USPTO processes the reply
+    to the Notice, the USPTO will generate another Filing Receipt incorporating the requested corrections</b>
+  </p>
+
+  <div class="field">
+    <div class="field-label">Applicant(s)</div>
+    <div class="applicants-list">
+      <div>Thomas John Bucella, Rochester, NY;</div>
+      <div>Thomas P. Dombroski, Fairport, NY;</div>
+      <div>David E. Fuchs, Pittsford, NY;</div>
+      <div>Jeremy K. Block, Walworth, NY;</div>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">Assignment For Published Patent Application</div>
+    <div>Teknic, Inc., Pittsford, NY</div>
+  </div>
+
+  <div class="field field-inline">
+    <span class="field-label">Power of Attorney:</span> The patent practitioners associated with Customer Number 20808
+  </div>
+
+  <div class="field">
+    <div class="field-label">Domestic Priority data as claimed by applicant</div>
+    <div>This appln claims benefit of 61/018,723 01/03/2008</div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">Foreign Applications</div>
+  </div>
+
+  <p class="intro-text">
+    Permission to Access - A proper Authorization to Permit Access to Application by Participating Offices
+    (PTO/SB/39 or its equivalent) has been received by the USPTO.
+  </p>
+
+  <div class="field field-inline">
+    <span class="field-label">If Required, Foreign Filing License Granted:</span> 01/09/2009
+  </div>
+
+  <p class="intro-text">
+    The country code and number of your priority application, to be used for filing abroad under the Paris Convention,
+    is US 12/346,054
+  </p>
+
+  <div class="field field-inline">
+    <span class="field-label">Projected Publication Date:</span> 07/09/2009
+  </div>
+
+  <div class="field field-inline">
+    <span class="field-label">Non-Publication Request:</span> No
+  </div>
+
+  <div class="field field-inline">
+    <span class="field-label">Early Publication Request:</span> No
+  </div>
+
+  <div class="small-entity">** SMALL ENTITY **</div>
+
+  <div class="field">
+    <div class="field-label">Title</div>
+    <div class="title-value">Method and Apparatus to Verify the Proper Connection of Loads before Applying Full DC Power</div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">Preliminary Class</div>
+    <div class="class-value">363</div>
+  </div>
+
+</div>
+</body>
+</html>
